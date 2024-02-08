@@ -9,7 +9,7 @@
             class="clock-list__add" 
             prepend-icon="mdi-plus" 
             color="#0ea5e9" 
-            @click="console.log('click')"
+            @click="router.push({ name: 'createClock' })"
             >
                 Создать
             </v-btn>
@@ -93,164 +93,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { getUserProjects } from '@/api/clocks';
+import useUsersStore from '@/store/users';
+
 const router = useRouter();
+const usersStore = useUsersStore();
 
 
-const projectsList = [
-    {
-        id: 1,
-        name: "Project 1",
-        description: "Description of Project 1",
-        created: 1621449600000,
-        price: 100,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 2,
-        name: "Project 2",
-        description: "Description of Project 2",
-        created: 1621449600000,
-        price: 100,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 4,
-        name: "Project 4",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 5,
-        name: "Project 5",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 6,
-        name: "Project 6",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 7,
-        name: "Project 7",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 8,
-        name: "Project 8",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 9,
-        name: "Project 9",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 10,
-        name: "Project 10",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 11,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 12,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 13,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 14,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 15,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 16,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 17,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 18,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-    {
-        id: 19,
-        name: "Project 11",
-        description: "Description of Project 3",
-        created: 1621449600000,
-        price: 10011,
-        cover: "https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png",
-    },
-];
+
+const projectsList = ref([]);
 // const search = ref('');
 // const itemsPerPage = ref(10);
 // const pagination = reactive({ page: 1 });
+const page = ref(1);
 const pageTotal = ref({
     total: 10,
     page: 1,
     perPage: 10,
+});
+
+// Получаем список проектов конкретного пользователя 
+onMounted(async() => {
+    try {
+        // Получаем пользователя
+        const currentUser = await usersStore.getUserAndCache();
+        projectsList.value = [...await getUserProjects(currentUser.id, true, true, 1)];
+    } catch (err) {
+        throw new Error(`components/clocksList:onMounted =>  ${err}`,);
+    }
 });
 
 // function searchProjects(value) {

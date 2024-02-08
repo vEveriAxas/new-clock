@@ -56,13 +56,12 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import clocksList from "../clocks/clocksList.vue";
-import { changeUserDataCP } from '@/api/users';
-import useUsersStore from "@/store/users";
+import { getUserByIdCP, changeUserDataCP } from '@/api/users';
 
+const route = useRoute();
 const router = useRouter();
-const store = useUsersStore();
 
 // Реактивные данные выбранного пользователя приходят с сервера в onMounted
 const userData = reactive({
@@ -81,7 +80,7 @@ const repassword = ref('');
 // Получение данных пользователя по ID
 onMounted(async() => {
     try {
-        const receivedUser = await store.getUserAndCache(true);  //тип route.params.id перевожу со string => number
+        const receivedUser = await getUserByIdCP(+route.params.id);  //тип route.params.id перевожу со string => number
         console.log(receivedUser);
         userData.id = receivedUser.id;
         userData.email = receivedUser.email;

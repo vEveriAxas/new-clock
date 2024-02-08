@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
         if(to.meta.requiredAuth === true) {
             next();
         } else {
-            if(to.name === 'notFound') {
+            if(to.name === 'notFound' || to.name === 'default') {
                 if(to.name !== 'default') {
                     next({name: 'clocks'});
                 }

@@ -20,6 +20,13 @@ export default [
                 meta: { requiredAuth: true },
             },
             {
+                // Маршрут для создания проекта
+                path: 'create-clock/', // Для параметра id валидны только числа
+                name: 'createClock',
+                component: clocksSelect,
+                meta: { requiredAuth: true },
+            },
+            {
                 // Маршрут для отрисовки выбранного проекта
                 path: 'select-clock/:id(\\d+)', // Для параметра id валидны только числа
                 name: 'selectClock',
