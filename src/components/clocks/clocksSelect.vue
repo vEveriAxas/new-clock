@@ -30,7 +30,7 @@
             <!-- Кнопки ("Просмотр часов" / "Сохранить") -->
             <v-sheet class="clock-select__buttons">
                 <v-btn color="primary" class="mr-2 text-none" width="45%" @click="showClock">Просмотр часов</v-btn>
-                <v-btn color="primary" width="45%" @click="editProject">Сохранить</v-btn>
+                <v-btn color="primary" width="45%" @click="createNewProject">Сохранить</v-btn>
             </v-sheet>
         </v-card>
 
@@ -43,6 +43,7 @@
             <v-card-title>Первая цифра</v-card-title>
             <v-card-text class="pa-1 d-flex flex-wrap">
                 <div class="mr-2" v-for="(video, index) in projectData.firstPosition" :key="index">
+                    {{ (video === null)? 'null' : '' }}
                     <clockInput 
                     :videoID="`video-first-position-${index}`"
                     v-model="projectData.firstPosition[index]" 
@@ -54,6 +55,7 @@
             <v-card-title>Вторая цифра</v-card-title>
             <v-card-text class="pa-1 d-flex flex-wrap">
                 <div class="mr-2" v-for="(video, index) in projectData.secondPosition" :key="index">
+                    {{ (video === null)? 'null' : '' }}
                     <clockInput 
                     :videoID="`video-second-position-${index}`"
                     v-model="projectData.secondPosition[index]" 
@@ -66,6 +68,7 @@
             <v-card-title>Третья цифра</v-card-title>
             <v-card-text class="pa-1 d-flex flex-wrap">
                 <div class="mr-2" v-for="(video, index) in projectData.thirdPosition" :key="index">
+                    {{ (video === null)? 'null' : '' }}
                     <clockInput 
                     :videoID="`video-third-position-${index}`"
                     v-model="projectData.thirdPosition[index]" 
@@ -77,6 +80,7 @@
             <v-card-title>Четвертая цифра</v-card-title>
             <v-card-text class="pa-1 d-flex flex-wrap">
                 <div class="mr-2" v-for="(video, index) in projectData.fourthPosition" :key="index">
+                    {{ (video === null)? 'null' : '' }}
                     <clockInput 
                     :videoID="`video-fourth-position-${index}`"
                     v-model="projectData.fourthPosition[index]" 
@@ -95,7 +99,7 @@ import clockInput from './clockInput.vue';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { 
-    editProjectByID, 
+    createProject, 
     getProjectByID,
     putVideoProjectByID,
 } from '@/api/clocks';
@@ -127,52 +131,107 @@ onMounted(async() => {
 });
 
 // Создание проекта
-// async function createNewProject() {
-//     console.log('createNewProject');
-//     try {
-//         // Поулучение новосозданного проекта для дальнейшего внесения в него видеофайлов
-//         const { name, description, isPublic, price } = projectData.value  // необходимые данные для первичного создания проекта
-//         const { project, user } = await createProject(name, description, price, isPublic);
-//         console.log('Пользователь который создал проект: ', user);
-//         projectData.value = {...project}
-//         console.log('projectData', projectData.value);
-//     } catch (err) {
-//         console.log(err);
-//         throw new Error(`components/clocksSelect:createNewProject => ${err}`);
-//     }
-// }
-
-// Редактирование проекта
-async function editProject() {
+async function createNewProject() {
+    console.log('createNewProject');
     try {
-        // Получение полей для редактирования проекта
-        const { name, description, isPublic, price } = projectData.value;
-        await editProjectByID(+route.params.id, name, description, price, isPublic);
+        // Поулучение новосозданного проекта для дальнейшего внесения в него видеофайлов
+        const { name, description, isPublic, price } = projectData.value  // необходимые данные для первичного создания проекта
+        const { project, user } = await createProject(name, description, price, isPublic);
+        console.log('Пользователь который создал проект: ', user);
+        projectData.value = {...project}
+        console.log('projectData', projectData.value);
     } catch (err) {
-        throw new Error(`components/clocksSelect:editProject => ${err}`);
+        console.log(err);
+        throw new Error(`components/clocksSelect:createNewProject => ${err}`);
     }
 }
 
-// Заполнение проекта данными
+// Редактирование проекта
+// async function editProject() {
+//     try {
+//         // Получение полей для редактирования проекта
+//         const { name, description, isPublic, price } = projectData.value;
+//         await editProjectByID(+route.params.id, name, description, price, isPublic);
+//     } catch (err) {
+//         throw new Error(`components/clocksSelect:editProject => ${err}`);
+//     }
+// }
+
+// Заполнение проекта данными (Видеофайлами)
 function addedVideos() {
-    
+    try {
+        // Объединяем все массивы с файлами в один массив для выполнения Promise.all позже
+        const generalPositionArray = [
+            { videoFiles: [...projectData.value.firstPosition], position: 'first' },
+            { videoFiles: [...projectData.value.secondPosition], position: 'second' },
+            { videoFiles: [...projectData.value.thirdPosition], position: 'third' },
+            { videoFiles: [...projectData.value.fourthPosition], position: 'fourth' },
+        ];
+        const promiseArray = [];  // В этот массив заполняются промисы выполняющие загрузку файлов на сервер. Используется как аргумент для Promise.all
+        // Проходим по объектам содержащим информацию о каждой позиции часов
+        generalPositionArray.forEach((positionObject) => {
+            // Выполняется обход в цикле каждого файла в массиве одной из четырех позиций
+            positionObject.videoFiles.forEach(async(file, index) => {
+                if (typeof file === 'object' && file !== null) {  // Если файла не существует либо если он в виде строки URL то не выполняем блок
+                    // Создается новый промис, который выполняет загрузку файла на сервер и записывается в массив Promise.all
+                    const fetchVideoURLPromise = new Promise((resolve, reject) => {
+                        try {
+                            putVideoProjectByID(+route.params.id, positionObject.videoFiles[index], positionObject.position, index)
+                                .then((response) => {
+                                    // Выходит измененный объект проекта 
+                                    resolve(response);
+                                });
+                        } catch (err) {
+                            // Обработка ошибок
+                            reject(new Error(`components/clocksSelect:addedVideos [forEach..] => ${err}`));
+                        }
+                    });
+                    // Добавление промиса в массив Promise.all
+                    promiseArray.push(fetchVideoURLPromise);
+                } else {
+                    console.log('Файл заполнен');
+                }
+            });
+        });
+        // Указывается аргументом массив промисов которые добавлены в цикле для ожидания окончания общей загрузки файлов на сервер
+        Promise.all(promiseArray)
+            .then((response) => {
+                console.log('Все промисы получения видеофайлов выполнены', response);
+            });
+    } catch (err) {
+        throw new Error(`components/clocksSelect:addedVideos => ${err}`);
+    }
     // First position
     try {
-        putVideoProjectByID(+route.params.id, projectData.value.firstPosition[0], "first", 0);
-        // projectData.value.firstPosition.forEach((videoFile, index) => {
-        //     if (videoFile) {
-        //         console.log('await_block');
-        //     }
-        // });
+        projectData.value.firstPosition.forEach((firstVideo, index) => {
+            // Если videoFile существует и типа object (Конструктор File) и если не равен null
+            if (typeof firstVideo === 'object' && firstVideo !== null) {
+                putVideoProjectByID(+route.params.id, projectData.value.firstPosition[index], "first", index);
+                console.log('await_block');
+            }
+        });
     } catch (err) {
         throw new Error(`components/clocksSelect:addedVideos > ['firstPosition'] => ${err}`);
     }
 
+    // // First position
+    // try {
+    //     projectData.value.firstPosition.forEach(async(firstVideo, index) => {
+    //         // Если videoFile существует и типа object (Конструктор File) и если не равен null
+    //         if (typeof firstVideo === 'object' && firstVideo !== null) {
+    //             await putVideoProjectByID(+route.params.id, firstVideo, "first", index);
+    //         }
+    //     });
+    // } catch (err) {
+    //     throw new Error(`components/clocksSelect:addedVideos > ['secondPosition'] => ${err}`); 
+    // }
+
     // // Second position
     // try {
-    //     projectData.value.secondPosition.forEach(async(videoFile, index) => {
-    //         if (videoFile) {
-    //             await putVideoProjectByID(+route.params.id, videoFile, "second", index);
+    //     projectData.value.secondPosition.forEach(async(secondVideo, index) => {
+    //         // Если videoFile существует и типа object (Конструктор File) и если не равен null
+    //         if (typeof secondVideo === 'object' && secondVideo !== null) {
+    //             await putVideoProjectByID(+route.params.id, secondVideo, "second", index);
     //         }
     //     });
     // } catch (err) {
@@ -182,9 +241,10 @@ function addedVideos() {
 
     // // Third position
     // try {
-    //     projectData.value.thirdPosition.forEach(async(videoFile, index) => {
-    //         if (videoFile) {
-    //             await putVideoProjectByID(+route.params.id, videoFile, "third", index);
+    //     projectData.value.thirdPosition.forEach(async(thirdVideo, index) => {
+    //         // Если videoFile существует и типа object (Конструктор File) и если не равен null
+    //         if (typeof thirdVideo === 'object' && thirdVideo !== null) {
+    //             await putVideoProjectByID(+route.params.id, thirdVideo, "third", index);
     //         }
     //     });
     // } catch (err) {
@@ -193,9 +253,10 @@ function addedVideos() {
     
     // // Fourth position
     // try {
-    //     projectData.value.fourthPosition.forEach(async(videoFile, index) => {
-    //         if (videoFile) {
-    //             await putVideoProjectByID(+route.params.id, videoFile, "fourth", index);
+    //     projectData.value.fourthPosition.forEach(async(fourthVideo, index) => {
+    //         // Если videoFile существует и типа object (Конструктор File) и если не равен null
+    //         if (typeof fourthVideo === 'object' && fourthVideo !== null) {
+    //             await putVideoProjectByID(+route.params.id, fourthVideo, "fourth", index);
     //         }
     //     });
     // } catch (err) {

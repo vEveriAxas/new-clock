@@ -135,7 +135,13 @@ async function editProjectByID(projectID, name, description, price, isPublic) {
 
 // Изменение/Добавление видеофайлов в проект по позициям
 async function putVideoProjectByID(projectID, videoData, positionNumber, index) {
-    // const errorStore = useErrorStore();
+    // const maskObjectProperty = {
+    //     first: 'firstPosition',
+    //     second: 'secondPosition',
+    //     third: 'thirdPosition',
+    //     fourth: 'fourthPosition',
+    // }
+    const errorStore = useErrorStore();
     const generalStore = useGeneralStore();
     const formData = new FormData();
     formData.append("new_video", videoData);
@@ -156,13 +162,15 @@ async function putVideoProjectByID(projectID, videoData, positionNumber, index) 
         const { data: { data } } = response;  // project
         // Форматирование ключей объекта полученного проекта с формата snake_case в CamelCase
         const updatedProject = generalStore.convertKeysToCamelCase(data);
-        console.log(response);
         return updatedProject;
     } catch (err) {
         // Обработка ошибок
         console.log(err);
-        // const { response: { status } } = err;
-        throw new Error(`api/clocks:putVideoProjectByID =>  ${err}`,);
+        const { response: { status } } = err;
+        if(status) {
+            throw new Error(`api/clocks:putVideoProjectByID =>  ${errorStore.checkErrorStatus(status)}`);
+        }
+        throw new Error(`api/clocks:putVideoProjectByID =>  ${err}`);
     }
 }
 
