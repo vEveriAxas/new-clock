@@ -2,13 +2,23 @@
   <v-navigation-drawer floating permanent color="#F1F5F9">
     <v-list density="compact" nav>
 
-      <!-- Вкладка "ЧАСЫ" -->
-      <v-list-item
+      <!-- Вкладка "МОИ ЧАСЫ" -->
+        <v-list-item
         :style="
           (route.name === 'clocksList') ? {backgroundColor: 'var(--text-primary)'} : {}
           "
         @click="router.push({ name: 'clocksList' })"
-        :title="'Часы'"
+        :title="'Мои часы'"
+        prepend-icon="mdi-clock"
+        ></v-list-item>
+
+      <!-- Вкладка "КАТАЛОГ" -->
+        <v-list-item
+        :style="
+          (route.name === 'catalog') ? {backgroundColor: 'var(--text-primary)'} : {}
+          "
+        @click="router.push({ name: 'catalog' })"
+        :title="'Каталог'"
         prepend-icon="mdi-clock"
         ></v-list-item>
 
