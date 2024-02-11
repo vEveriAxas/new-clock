@@ -88,13 +88,29 @@
             </v-card-text>
         </v-card-item>
 
+        <!-- Блок Действий с проектом -->
         <v-card-actions class="clock__actions px-4 py-0">
             <v-spacer></v-spacer>
+        
+            <!-- Кнопка Редактировать проект -->
             <v-btn 
             class="d-flex align-center justify-center pa-3"
+            v-if="true"
+            style="color: white;"
+            prepend-icon="mdi-currency-usd"
+            rounded="lg"
+            variant="flat"
+            color="var(--text-primary)"
+            text="Купить"
+            ></v-btn>
+        
+            <!-- Кнопка Редактировать проект -->
+            <v-btn 
+            class="d-flex align-center justify-center pa-3"
+            v-else
             density="compact"
-            size="small"
             icon="mdi-pen"
+            size="small"
             color="var(--text-primary)"
             ></v-btn>
         </v-card-actions>

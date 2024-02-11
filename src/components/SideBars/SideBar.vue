@@ -19,7 +19,7 @@
           "
         @click="router.push({ name: 'catalog' })"
         :title="'Каталог'"
-        prepend-icon="mdi-clock"
+        prepend-icon="mdi-cart"
         ></v-list-item>
 
       <!-- Вкладка "ПОЛЬЗОВАТЕЛИ" -->

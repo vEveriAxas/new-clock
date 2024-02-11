@@ -2,7 +2,7 @@
     <!-- Компонент отображает список проектов (Часов) -->
     <v-card class="clocks-list__container">
         <!-- Блок перефирии для взаимодействия с проектами  -->
-        <v-card class="clock-list__buttons" elevation="0" rounded="0">
+        <v-card class="clock-list__buttons" elevation="0">
             <v-card-title class="clock-list__title">Проекты</v-card-title>
             <!-- +СОЗДАТЬ -->
             <v-btn 
@@ -15,8 +15,27 @@
             </v-btn>
         </v-card>
 
+        <!-- Основная часть -->
+        <div class="clock-list__body">
+            <v-card class="profile">
+                hello
+            </v-card>
+    
+            <!-- Список Проектов -->
+            <v-row class="clock-list">
+                <v-col 
+                v-for="(project, index) in 10" 
+                cols="6"
+                sm="5" 
+                md="4"
+                :key="index">   
+                    <clockItemComp/>
+                </v-col>
+            </v-row>
+        </div>
+
         <!-- Список проектов -->
-        <v-card class="rounded-lg">
+        <v-card v-if="false" class="rounded-lg">
             <v-table class="clock-list__table text-none" rounded="0" fixed-header density="compact">
 
                 <!-- Поле заголовков -->
@@ -93,6 +112,7 @@
 </template>
 
 <script setup>
+import clockItemComp from '../generals/clockItemComp.vue';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getUserProjects } from '@/api/clocks';
@@ -148,19 +168,42 @@ function showClock(index) {
 
 <style scoped>
 .clocks-list__container {
+    position: relative;
     max-height: 100%;
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+}
+.clock-list__body {
+    display: flex;
+    width: 100%;
+    height: max-content;
+}
+.profile {
+    position: sticky;
+    top: 4.5em;
+    width: 60em;
+    height: max-content;
+    margin: 10px;
+
 }
 .clock-list__buttons {
+    position: sticky;
+    top: 0;
     width: 100% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;
     padding: 0.5rem !important;
-    background-color: var(--background);
+    background-color: rgba(255, 255, 255, .8) !important;
+    backdrop-filter: blur(16px);
     box-shadow: none !important;
-    border-radius: none !important;
     font-family: "Nunito Sans", sans-serif;
+    border-bottom: 1px solid rgba(126, 126, 126, 0.45);
+    z-index: 100;
+}
+.clock-list {
+    padding: 10px;
+    /* max-height: 75vh !important; */
 }
 .clock-list__title {
     margin: 0 auto 0 15px !important;
