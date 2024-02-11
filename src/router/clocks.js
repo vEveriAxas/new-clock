@@ -1,5 +1,6 @@
 // Маршруты относящиеся к проектам пользователя (ЧАСОВ)
 import MainView from '../views/MainView.vue';
+import catalogComp from '../components/catalog/catalogComp.vue';
 import clocksList from '../components/clocks/clocksList.vue';
 import clocksSelect from '../components/clocks/clocksSelect.vue';
 import NotFound404 from '../views/NotFound404.vue';
@@ -12,6 +13,13 @@ export default [
         redirect: { name: 'clocksList' },
         meta: { requiredAuth: true },
         children: [
+            {
+                // Маршрут для просмотра каталога
+                path: 'catalog',
+                name: 'catalog',
+                component: catalogComp,
+                meta: { requiredAuth: true },
+            },
             {
                 // Маршрут для просмотра списка проектов
                 path: 'my-clocks',
