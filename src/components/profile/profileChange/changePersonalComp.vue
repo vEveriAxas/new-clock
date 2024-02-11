@@ -1,4 +1,4 @@
-<template>
+ <template>
     <!-- Блок Редактирования ОБЩЕЙ ИНФОРМАЦИИ -->
     <v-card 
     color="background" 
@@ -7,6 +7,12 @@
     v-if="registrationData"
     >
         <v-card class="change-personal d-flex flex-column pa-3 pb-0 rounded-lg">
+            <v-card-item>
+                <img v-if="true" class="profile-card__image avatar-stab" src="../../../assets/base/empty-user.svg" alt="avatar-stab"  />
+                <v-card-title >John</v-card-title>
+                <v-card-title>Example</v-card-title>
+                <v-card-title>John</v-card-title>
+            </v-card-item>
 
             <!-- Форма для редактирования общей информации -->
             <v-form class="change-personal__form text-left" ref="refForm" lazy-validation>
@@ -163,4 +169,7 @@ function resetErrors() {
 .change-personal__form {
     padding: .5rem 3rem !important;
 }
+.avatar-stab {
+    width: 152px;
+} 
 </style>

@@ -1,15 +1,12 @@
 <template>
     <div class="profile-card__container">
         <!-- Компонент для загрузки или создания аватарки -->
-        <div class="profile-card__image" v-if="false">
+        <!-- <div class="profile-card__image" v-if="false">
             <ImageInputBaseCircle @loadPhoto="loadingPhoto"/>
-        </div>
+        </div> -->
 
         <!-- Шаблон отображает аватарку или заглушку в случае если аватарки нет -->
-        <template v-else>
-            <v-avatar v-if="props.data?.avatar" :image="props.data.avatar" size="152"></v-avatar>
-            <img v-else class="profile-card__image avatar-stab" src="../../../assets/base/empty-user.svg" alt="avatar-stab"  />
-        </template>
+        <img v-if="true" class="profile-card__image avatar-stab" src="../../../assets/base/empty-user.svg" alt="avatar-stab"  />
 
         <!-- Блок взаимодействия с карточкой пользователя -->
         <div class="profile-card__body">
@@ -22,48 +19,41 @@
             <!-- Кнопки `Подробнее` -->
             <div class="profile-card__actions">
 
-                <!-- Кнопка Подробнее (о местоположении) -->
-                <v-btn class="more-details text-subtitle-2 pl-0" variant="text">
-                    <v-icon class="mr-2">
-                        mdi-google-maps
-                    </v-icon>
-                    Подробнее
-                </v-btn>
                 <!-- Кнопка Подробнее (о аккаунте пользователя) -->
-                <v-btn class="more-details text-subtitle-2 ml-2" @click="dialog = !dialog" variant="text">
+                <!-- <v-btn class="more-details text-subtitle-2 ml-2" @click="dialog = !dialog" variant="text">
                     <v-icon class="mr-2">
                         mdi-information-outline
                     </v-icon>
                     Подробнее
-                </v-btn>
+                </v-btn> -->
             </div>
 
             <!-- Кнопка Редактировать профиль -->
-            <v-btn 
+            <!-- <v-btn 
             class="edit-btn text-text text-subtitle-1" 
             variant="tonal"
             @click="handlerEditButton"
             >
                 {{ buttonEditValue }}
-            </v-btn>
+            </v-btn> -->
             <!-- <v-card-actions>
             </v-card-actions> -->
         </div>
         <!-- Диалоговое окно для просмотра информации о пользователе -->
         <v-dialog class="profile-card__information-dialog" v-model="dialog">
-            <InformationCardComp :data="props.data" @close="close" />
+            <!-- <InformationCardComp :data="props.data" @close="close" /> -->
         </v-dialog>
     </div>
 </template>
 
 <script setup>
-import InformationCardComp from "../general/informationCardComp.vue";
-import ImageInputBaseCircle from "../general/imageInputBaseCircle.vue";
-import { ref, defineProps, computed } from "vue";
+// import InformationCardComp from "../general/informationCardComp.vue";
+// import ImageInputBaseCircle from "../general/imageInputBaseCircle.vue";
+import { ref, defineProps } from "vue";
 // Router
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
+// import { useRouter, useRoute } from "vue-router";
+// const router = useRouter();
+// const route = useRoute();
 
 // Приходит объект с данными пользователя
 const props = defineProps({
@@ -73,28 +63,24 @@ const props = defineProps({
 const dialog = ref(false);
 
 // Вычисляет название кнопки `Редактировать`/ `Назад`
-const buttonEditValue = computed(() => {
-    if(route.name === 'change') {
-        return 'Назад';
-    } else return 'Редактировать профиль';
-})
+// const buttonEditValue = computed(() => {
+//     if(route.name === 'change') {
+//         return 'Назад';
+//     } else return 'Редактировать профиль';
+// })
 
 // Обработчик клика по кнопке `Редактировать`/ `Назад`
-function handlerEditButton() {
-    if(route.name === 'info') {
-        router.push({ name: 'change' });
-    } else if(route.name === 'change') {
-        router.go(-1);
-    }
-}
+// function handlerEditButton() {
+//     if(route.name === 'info') {
+//         router.push({ name: 'change' });
+//     } else if(route.name === 'change') {
+//         router.go(-1);
+//     }
+// }
 
-function loadingPhoto(photo) {
-    // changeAvatarUser(userData.value.avatar);
-    console.log(photo);
-}
-function close() {
-    dialog.value = false;
-}
+// function close() {
+//     dialog.value = false;
+// }
 </script>
 
 <style scoped>

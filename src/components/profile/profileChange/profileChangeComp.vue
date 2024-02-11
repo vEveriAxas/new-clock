@@ -17,31 +17,7 @@
             elevation="0" 
             color="background">
                 <!-- Титульный блок (Блок с аватркой пользователя) -->
-                <profileCardComp :data="userData" />
-
-                <v-window 
-                class="profile-change__wrapped rounded-lg"
-                v-model="tab">
-                    <!-- ОБЩИЕ ДАННЫЕ (имя, фамилия, д.рожд, пол и тд) -->
-                    <v-window-item :value="1">
-                        <changePersonalComp @update="updateData" :data="userData" />
-                    </v-window-item>
-
-                    <!-- БИОГРАФИЯ / ИНТЕРЕСЫ -->
-                    <v-window-item :value="2">
-                        <changeIntrestingComp @update="updateData" :data="userData" />
-                    </v-window-item>
-
-                    <!-- СЕМЕЙНЫЕ ДАННЫЕ -->
-                    <v-window-item :value="3">
-                        <changeFamilyComp @update="updateData" :data="userData" />
-                    </v-window-item>
-
-                    <!-- КОНТАКТНАЯ ИНФОРМАЦИЯ -->
-                    <v-window-item :value="4">
-                        <changeContactsComp @update="updateData" :data="userData" />
-                    </v-window-item>
-                </v-window>
+                <!-- <profileCardComp :data="userData" /> -->
             </v-card>
 
         </v-card>
@@ -49,16 +25,16 @@
 </template>
 
 <script setup>
-import profileCardComp from "../general/profileCardComp.vue";
-import changePersonalComp from "./changePersonalComp.vue";
-import changeIntrestingComp from "./changeIntrestingComp.vue";
-import changeFamilyComp from "./changeFamilyComp.vue";
-import changeContactsComp from "./changeContactsComp.vue";
+// import profileCardComp from "../general/profileCardComp.vue";
+// import changePersonalComp from "./changePersonalComp.vue";
+// import changeIntrestingComp from "./changeIntrestingComp.vue";
+// import changeFamilyComp from "./changeFamilyComp.vue";
+// import changeContactsComp from "./changeContactsComp.vue";
 // import { profileApi } from "../../api/profileApi";
-import { ref, reactive, onMounted } from "vue";
+import {  reactive, onMounted } from "vue";
 
 // const { getUser } = profileApi();
-const tab = ref(null);
+// const tab = ref(null);
 
 const userData = reactive({
     email: null,
@@ -76,9 +52,9 @@ onMounted(() => {
     userData.id = 1;
     userData.tel = '+79997214215';
 });
-function updateData() {
-    console.log('updateData');
-}
+// function updateData() {
+//     console.log('updateData');
+// }
 
 </script>
 
@@ -121,4 +97,5 @@ function updateData() {
     color: #415174;
     border: none !important;
 }
+
 </style>
