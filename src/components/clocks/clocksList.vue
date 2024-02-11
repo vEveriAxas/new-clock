@@ -3,7 +3,7 @@
     <v-card class="clocks-list__container">
         <!-- Блок перефирии для взаимодействия с проектами  -->
         <v-card class="clock-list__buttons" elevation="0">
-            <v-card-title class="clock-list__title">Проекты</v-card-title>
+            <v-card-title class="clock-list__title">Ваши проекты</v-card-title>
             <!-- +СОЗДАТЬ -->
             <v-btn 
             class="clock-list__add" 
@@ -15,24 +15,15 @@
             </v-btn>
         </v-card>
 
-        <!-- Основная часть -->
-        <div class="clock-list__body">
-            <v-card class="profile">
-                hello
-            </v-card>
-    
-            <!-- Список Проектов -->
-            <v-row class="clock-list">
-                <v-col 
-                v-for="(project, index) in 10" 
-                cols="6"
-                sm="5" 
-                md="4"
-                :key="index">   
-                    <clockItemComp/>
-                </v-col>
-            </v-row>
-        </div>
+        <!-- Список Проектов -->
+        <v-row class="clock-list">
+            <v-col 
+            v-for="(project, index) in 10" 
+            cols="3"
+            :key="index">   
+                <clockItemComp/>
+            </v-col>
+        </v-row>
 
         <!-- Список проектов -->
         <v-card v-if="false" class="rounded-lg">
@@ -170,21 +161,11 @@ function showClock(index) {
 .clocks-list__container {
     position: relative;
     max-height: 100%;
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+    box-shadow: none !important;
     overflow-y: auto;
-}
-.clock-list__body {
-    display: flex;
-    width: 100%;
-    height: max-content;
-}
-.profile {
-    position: sticky;
-    top: 4.5em;
-    width: 60em;
-    height: max-content;
-    margin: 10px;
-
+    border-bottom: 1px solid rgba(126, 126, 126, 0.2);
+    background-color: rgba(0,0,0,0) !important;
+    border-radius: 0 !important;
 }
 .clock-list__buttons {
     position: sticky;
@@ -198,7 +179,7 @@ function showClock(index) {
     backdrop-filter: blur(16px);
     box-shadow: none !important;
     font-family: "Nunito Sans", sans-serif;
-    border-bottom: 1px solid rgba(126, 126, 126, 0.45);
+    border-bottom: 1px solid rgba(126, 126, 126, 0.2);
     z-index: 100;
 }
 .clock-list {

@@ -44,18 +44,6 @@
                 </v-window>
             </v-card>
 
-            <!-- Меню для переключения окна редактирования -->
-            <v-card class="profile-change__menu" color="background" elevation="0">
-                <v-card class="rounded-lg">
-                    <v-tabs hide-slider direction="vertical" v-model="tab" class="pa-3"
-                        selected-class="active-settings-profile__tab">
-                        <v-tab class="menu-tab " density="compact" :value="1">Личные данные</v-tab>
-                        <v-tab class="menu-tab mt-1" density="compact" :value="2">Интересы</v-tab>
-                        <v-tab class="menu-tab mt-1" density="compact" :value="3">Семья</v-tab>
-                        <v-tab class="menu-tab mt-1" density="compact" :value="4">Контакты</v-tab>
-                    </v-tabs>
-                </v-card>
-            </v-card>
         </v-card>
     </div>
 </template>

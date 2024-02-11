@@ -1,6 +1,6 @@
 <template>
     <v-main>
-        <v-app-bar class="bg-background" :elevation="0" max-height="60">
+        <v-app-bar class="app-bar bg-background" :elevation="0" max-height="60">
             <div class="d-flex align-center justify-space-between w-100">
                 <div class="d-flex align-center">
                     <span class="text-h5 text-primary fw-700 ml-2">
@@ -53,6 +53,10 @@ function logoutApp() {
 </script>
 
 <style scoped>
+.app-bar {
+    border-bottom: 1px solid rgba(126, 126, 126, 0.2);
+
+}
 .app-bar__avatar {
     width: 40px;
     height: 40px;

@@ -2,6 +2,16 @@
   <v-navigation-drawer floating permanent color="#F1F5F9">
     <v-list density="compact" nav>
 
+      <!-- Вкладка "АККАУНТ" -->
+        <v-list-item
+        :style="
+          (route.name === 'info') ? {backgroundColor: 'var(--text-primary)'} : {}
+          "
+        @click="router.push({ name: 'info' })"
+        :title="'Аккаунт'"
+        prepend-icon="mdi-account"
+        ></v-list-item>
+
       <!-- Вкладка "МОИ ЧАСЫ" -->
         <v-list-item
         :style="
