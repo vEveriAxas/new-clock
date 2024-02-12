@@ -2,35 +2,44 @@
     <!-- Контейнер для формы -->
     <v-card color="background" elevation="0" class="d-flex align-start">
 
-        <!-- Форма просмотра выбранных часов -->
+        <!-- Форма создания общих сведений проекта -->
         <v-card class="pa-4 w-50" rounded="lg">
 
             <!-- Заголовок Формы -->
-            <v-card-title class="pl-0">Основная информация</v-card-title>
+            <v-card-title class="create-clock__title pl-0">Основная информация</v-card-title>
 
             <!-- Подзаголовок "Имя проекта" -->
-            <v-card-text class="pa-1">
-                <div>Имя проекта</div>
-                <v-text-field class="mt-1" variant="solo" v-model="projectData.name"></v-text-field>
-            </v-card-text>
+            <v-card-subtitle class="create-clock__subtitle text-subtitle-2">Имя проекта</v-card-subtitle>
+            <v-text-field 
+            class="mt-1" 
+            color="var(--text-primary)" 
+            variant="outlined" 
+            v-model="projectData.name"
+            ></v-text-field>
 
             <!-- Подзаголовок "Описание проекта" -->
-            <v-card-text class="pa-1">
-                <div>Описание проекта</div>
-                <v-textarea rows="1" auto-grow="" class="mt-1" variant="solo"
-                    v-model="projectData.description"></v-textarea>
-            </v-card-text>
+            <v-card-subtitle class="create-clock__subtitle text-subtitle-2">Описание проекта</v-card-subtitle>
+            <v-textarea 
+            rows="1" 
+            color="var(--text-primary)" 
+            variant="outlined" 
+            auto-grow="" 
+            class="mt-1"
+            v-model="projectData.description"
+            ></v-textarea>
 
             <!-- Подзаголовок "Дата создания проекта" -->
-            <v-card-text class="pa-1">
-                <div>Стоимость проекта</div>
-                <v-text-field class="mt-1" variant="solo" v-model="projectData.price"></v-text-field>
-            </v-card-text>
+            <v-card-subtitle class="create-clock__subtitle text-subtitle-2">Стоимость проекта</v-card-subtitle>
+            <v-text-field 
+            class="mt-1" 
+            color="var(--text-primary)" 
+            variant="outlined" 
+            v-model="projectData.price"
+            ></v-text-field>
 
             <!-- Кнопки ("Просмотр часов" / "Сохранить") -->
             <v-sheet class="clock-select__buttons">
-                <v-btn color="primary" class="mr-2 text-none" width="45%" @click="showClock">Просмотр часов</v-btn>
-                <v-btn color="primary" width="45%" @click="createNewProject">Сохранить</v-btn>
+                <v-btn color="primary" block @click="createNewProject">Сохранить</v-btn>
             </v-sheet>
         </v-card>
 
@@ -96,17 +105,16 @@
   
 <script setup>
 import clockInput from './clockInput.vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { 
     createProject, 
-    getProjectByID,
     putVideoProjectByID,
 } from '@/api/clocks';
 
 const route = useRoute();
 
-const clockDialog = ref(false);
+// const clockDialog = ref(false);
 const projectData = ref({
     name: null,
     description: null,
@@ -119,16 +127,16 @@ const projectData = ref({
 });
 
 
-// Получение данных текущего проекта
-onMounted(async() => {
-    try {
-        const project = await getProjectByID(+route.params.id); // преобразуем id со строки в число 
-        projectData.value = project;
-        console.log(projectData.value);
-    } catch (err) {
-        throw new Error(`components/clocksSelect:onMounted => ${err}`);
-    }
-});
+// // Получение данных текущего проекта
+// onMounted(async() => {
+//     try {
+//         const project = await getProjectByID(+route.params.id); // преобразуем id со строки в число 
+//         projectData.value = project;
+//         console.log(projectData.value);
+//     } catch (err) {
+//         throw new Error(`components/clocksSelect:onMounted => ${err}`);
+//     }
+// });
 
 // Создание проекта
 async function createNewProject() {
@@ -263,16 +271,23 @@ function addedVideos() {
     //     throw new Error(`components/clocksSelect:addedVideos > ['fourthPosition'] => ${err}`);
     // }
 }
-function showClock() {
-    clockDialog.value = true;
-    console.log(projectData.value);
-}
+// function showClock() {
+//     clockDialog.value = true;
+//     console.log(projectData.value);
+// }
 </script>
 
 <style scoped>
 .clock-select__buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin: 1rem 0;
+}
+.create-clock__title {
+    color: var(--text-descr);
+
+}
+.create-clock__subtitle {
+    color: var(--text-descr);
 }
 </style>

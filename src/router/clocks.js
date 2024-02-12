@@ -29,7 +29,7 @@ export default [
             },
             {
                 // Маршрут для создания проекта
-                path: 'create-clock/', // Для параметра id валидны только числа
+                path: 'create-clock/',
                 name: 'createClock',
                 component: clocksSelect,
                 meta: { requiredAuth: true },

@@ -6,9 +6,9 @@
             <v-card-item class="information__block">
                 <img v-if="true" class="profile-card__image avatar-stab" src="../../../assets/base/empty-user.svg" alt="avatar-stab"  />
                 <v-divider></v-divider>
-                <v-card-title class="information__title">John</v-card-title>
-                <v-card-title class="information__title">Doe</v-card-title>
-                <v-card-title class="information__title">Sergeevich</v-card-title>
+                <v-card-title class="information__title">{{ firstName }}</v-card-title>
+                <v-card-title class="information__title">{{ lastName }}</v-card-title>
+                <v-card-title class="information__title">{{ surName }}</v-card-title>
                 <v-divider></v-divider>
             </v-card-item>
 
@@ -16,17 +16,29 @@
             <v-form>
                 <!-- ИМЯ -->
                 <v-responsive class="form__field">
-                    <v-text-field label="Имя" type="input"></v-text-field>
+                    <v-text-field 
+                    label="Имя"
+                    type="input"
+                    v-model="firstName"
+                    ></v-text-field>
                 </v-responsive>
 
                 <!-- ФАМИЛИЯ -->
                 <v-responsive class="form__field">
-                    <v-text-field label="Фамилия" type="input"></v-text-field>
+                    <v-text-field 
+                    label="Фамилия" 
+                    type="input"
+                    v-model="lastName"
+                    ></v-text-field>
                 </v-responsive>
 
                 <!-- ОТЧЕСТВО -->
                 <v-responsive class="form__field">
-                    <v-text-field label="Отчество" type="input"></v-text-field>
+                    <v-text-field 
+                    label="Отчество" 
+                    type="input"
+                    v-model="surName"
+                    ></v-text-field>
                 </v-responsive>
 
                 <!-- E-MAIL -->
@@ -77,25 +89,6 @@
             </div>
             <v-divider></v-divider>
             
-            <!-- Доступно к выводу средств -->
-            <div class="statistic__available-dividend">
-                <p class="statistic__subtitle">
-                    Доступно к выводу средств:
-                </p>
-                <p class="statistic__subtitle">
-                    599$
-                </p>
-                <v-btn 
-                :loading="isLoadGetMoney"
-                @click="load"
-                class="statistic__get-money"
-                variant="flat" 
-                color="var(--text-primary)" 
-                style="color: white;"
-                size="small"
-                >Вывести</v-btn>
-            </div>
-            <v-divider></v-divider>
         </v-card-item>
     </v-card>
 </template>
@@ -118,10 +111,22 @@ const userData = ref({
 
 const isLoadGetMoney = ref(false);
 
+const firstName = ref('');
+const lastName = ref('');
+const surName = ref('');
+
 onMounted(async () => {
     // Получение пользователя их БД или из localStorage
     userData.value = await userStore.getUserAndCache();
+    splitFullName()
 });
+
+// Разбиение fullName на имя фамилия и отчество
+function splitFullName() {
+    firstName.value = userData.value.fullName.split(' ')[0];
+    lastName.value = userData.value.fullName.split(' ')[1];
+    surName.value = userData.value.fullName.split(' ')[2];
+}
 
 function load( ) {
     isLoadGetMoney.value = true;
@@ -143,6 +148,7 @@ function load( ) {
 .profile-info__information {
     width: 35%;
     border-right: 1px solid rgba(0, 0, 0, 0.2);
+
 }
 .information__block {
     display: flex;

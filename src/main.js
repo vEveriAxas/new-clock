@@ -25,4 +25,8 @@ components.forEach((component) => {
   app.component(component.compName, component);
 });
 
-app.use(vuetify).use(pinia).use(router).mount("#app");
+app
+  .use(vuetify)
+  .use(pinia)
+  .use(router)
+  .mount("#app");
