@@ -23,6 +23,7 @@
                     @click="goToProfileInfo"
                     style="cursor: pointer;"
                     >
+                        <v-card-title class="app-bar__fullname">{{ userFullName }}</v-card-title>
                     <!-- <span class="ml-2 mr-4">{{ (store.user.fullName)? '' }}</span> -->
                     <v-btn rounded="0" icon="mdi-logout" class="mr-5" color="text" @click="logoutApp"></v-btn>
                 </div>
@@ -34,8 +35,19 @@
 <script setup>
 import useAuthStore from '@/store/auth';
 import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import useUsersStore from '@/store/users';
+
 const store = useAuthStore();
+const usersStore = useUsersStore();
 const router = useRouter();
+
+const userFullName = ref('User');
+
+onMounted(async() => {
+    const user = await usersStore.getUserAndCache();
+    userFullName.value = user.fullName;
+})
 
 // Переход на страницу пользователя
 function goToProfileInfo() {
@@ -61,5 +73,11 @@ function logoutApp() {
     width: 40px;
     height: 40px;
     margin-right: 10px;
+}
+.app-bar__fullname {
+    color: var(--text-descr);
+    padding: 0 .5rem;
+    font-size: 18px;
+    cursor: default;
 }
 </style>

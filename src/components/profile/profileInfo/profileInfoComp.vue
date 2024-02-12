@@ -43,7 +43,11 @@
 
                 <!-- E-MAIL -->
                 <v-responsive class="form__field">
-                    <v-text-field label="E-mail" type="input"></v-text-field>
+                    <v-text-field 
+                    label="E-mail" 
+                    type="input"
+                    v-model="userData.email"
+                    ></v-text-field>
                 </v-responsive>
 
                 <!-- ПОДПИСКА -->
@@ -60,7 +64,12 @@
                     <v-card-subtitle>до 01.09.2024</v-card-subtitle>
                 </v-sheet>
 
-                <v-btn class="form__btn-confirm" color="var(--text-primary)" block variant="flat">Сохранить</v-btn>
+                <!-- Кнопка СОХРАНИТЬ -->
+                <v-btn 
+                class="form__btn-confirm" 
+                color="var(--text-primary)" 
+                block variant="flat"
+                >Сохранить</v-btn>
             </v-form>
         </v-card-item>
 
