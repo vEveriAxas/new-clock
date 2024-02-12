@@ -21,7 +21,7 @@ export default [
                 meta: { requiredAuth: true },
             },
             {
-                // Маршрут для просмотра списка проектов
+                // Маршрут для просмотра списка проектов авторизованного пользователя
                 path: 'my-clocks',
                 name: 'clocksList',
                 component: clocksList,
@@ -29,7 +29,7 @@ export default [
             },
             {
                 // Маршрут для создания проекта
-                path: 'create-clock/',
+                path: 'create-clock',
                 name: 'createClock',
                 component: clocksSelect,
                 meta: { requiredAuth: true },
@@ -38,6 +38,13 @@ export default [
                 // Маршрут для отрисовки выбранного проекта
                 path: 'select-clock/:id(\\d+)', // Для параметра id валидны только числа
                 name: 'selectClock',
+                component: clocksSelect,
+                meta: { requiredAuth: true },
+            },
+            {
+                // Маршрут для отрисовки выбранного проекта
+                path: 'change-clock/:id(\\d+)', // Для параметра id валидны только числа
+                name: 'changeClock',
                 component: clocksSelect,
                 meta: { requiredAuth: true },
             },

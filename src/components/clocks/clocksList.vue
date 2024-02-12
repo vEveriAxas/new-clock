@@ -24,81 +24,6 @@
                 <clockItemComp :clockData="item"/>
             </v-col>
         </v-row>
-
-        <!-- Список проектов -->
-        <v-card v-if="false" class="rounded-lg">
-            <v-table class="clock-list__table text-none" rounded="0" fixed-header density="compact">
-
-                <!-- Поле заголовков -->
-                <thead class="bg-white" color="">
-                    <tr>
-                        <th class="text-left" style="width: 20px">ID</th>
-                        <th class="text-left">Проект</th>
-                        <th class="text-left">Описание</th>
-                        <th class="text-left">Дата создания</th>
-                        <th class="text-left">Стоимость</th>
-                        <th class="text-right"></th>
-                    </tr>
-                </thead>
-
-                <!-- Тело таблицы -->
-                <tbody class="bg-white">
-                    <!-- Поля элементов таблицы -->
-                    <tr 
-                    class="pointer"
-                    v-for="(item, index) in projectsList" 
-                    :key="item.name"
-                    @click="router.push({ name: 'selectClock', params: { id: item.id }})"  
-                    >
-
-                        <!-- поле: ID -->
-                        <td @click="showClock(index)">{{ item.id }}</td>
-
-                        <!-- поле: Название проекта -->
-                        <td @click="showClock(index)">
-                            <div class="d-flex align-center">
-                                <v-avatar :image="item.cover ??
-                                    'https://advour.ru/wp-content/uploads/c/d/c/cdcf919447b7312e113b2e8d09768bd2.png'
-                                    "></v-avatar>
-                                <div class="ml-4">
-                                    <div class="font-weight-bold">
-                                        {{ item.name }}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- поле: Описание -->
-                        <td @click="showClock(index)">
-                            {{ item.description }}
-                        </td>
-
-                        <!-- поле: Дата создания -->
-                        <td @click="showClock(index)">
-                            {{ new Date(item.created * 1000).toLocaleString() }}
-                        </td>
-
-                        <!-- поле: Стоимость -->
-                        <td @click="showClock(index)">{{ item.price ?? 0 }}</td>
-
-                        <!-- поле: Действия -->
-                        <td class="text-right">
-                            <div class="d-flex justify-end">
-                                <v-btn icon="mdi-pen" size="small" elevation="0" flat=""
-                                    @click="selectProject(item.id)"></v-btn>
-                                <v-btn icon="mdi-delete" size="small" flat="" @click="deleteProject(item.id)"></v-btn>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </v-table>
-
-            <!-- Пагинация -->
-            <v-card rounded="0" class="bg-white w-100 d-flex align-center">
-                <v-pagination density="compact" v-model="page" :length="pageTotal.total" :total-visible="5"
-                    @update:modelValue="updateDataUsers(page)"></v-pagination>
-            </v-card>
-        </v-card>
     </v-card>
 </template>
 
@@ -114,15 +39,6 @@ const usersStore = useUsersStore();
 
 
 const projectsList = ref([]);
-// const search = ref('');
-// const itemsPerPage = ref(10);
-// const pagination = reactive({ page: 1 });
-const page = ref(1);
-const pageTotal = ref({
-    total: 10,
-    page: 1,
-    perPage: 10,
-});
 
 // Получаем список проектов конкретного пользователя 
 onMounted(async() => {
@@ -130,7 +46,6 @@ onMounted(async() => {
         // Получаем пользователя
         const currentUser = await usersStore.getUserAndCache();
         projectsList.value = [...await getUserProjects(currentUser.id, true, true, 1)];
-        console.log(projectsList.value);
     } catch (err) {
         throw new Error(`components/clocksList:onMounted =>  ${err}`,);
     }
@@ -142,18 +57,6 @@ onMounted(async() => {
 // function updatePagination(pagination) {
 //     pagination.page = pagination;
 // }
-function updateDataUsers(page) {
-    pageTotal.value.page = page;
-}
-function selectProject(id) {
-    console.log(id);
-}
-function deleteProject(id) {
-    console.log(id);
-}
-function showClock(index) {
-    console.log(index);
-}
 
 </script>
 

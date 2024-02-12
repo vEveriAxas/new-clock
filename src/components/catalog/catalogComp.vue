@@ -1,4 +1,5 @@
 <template>
+    <!-- Каталог всех проектов -->
     <v-row>
         <v-col 
         v-for="(project, index) in projectsList" 

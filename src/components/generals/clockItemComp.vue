@@ -106,8 +106,9 @@
         
             <!-- Кнопка Редактировать проект -->
             <v-btn 
-            class="d-flex align-center justify-center pa-3"
             v-else
+            class="d-flex align-center justify-center pa-3"
+            @click="router.push({name: 'createClock'})"
             style="color: white;"
             prepend-icon="mdi-pen"
             rounded="lg"
@@ -124,9 +125,11 @@ import momentCofig from '@/plugins/momentConfig';
 import generalUseStore from '@/store/general';
 import useUsersStore  from '@/store/users';
 import { ref, defineProps, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const generalStore = generalUseStore();
 const usersStore = useUsersStore();
+const router = useRouter();
 
 const props = defineProps({
     clockData: {
