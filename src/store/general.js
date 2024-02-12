@@ -47,9 +47,31 @@ const useGeneralStore = defineStore("generalStore", () => {
         }
         return flag;
     }
+
+    function formatCurrency(amount) {
+        // Преобразование числа в строку и удаление пробелов
+        const strAmount = String(amount).replace(/\s+/g, '');
+      
+        // Деление числа на разряды
+        const parts = strAmount.split('.');
+        const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      
+        // Объединение разделителя тысяч и копеек
+        let result = integerPart;
+        if (parts.length > 1) {
+          result += `.${parts[1]}`;
+        }
+      
+        // Добавление символа рубля
+        result += ' ₽';
+      
+        return result;
+      }
+
     return {
         convertKeysToCamelCase,
         compareObjects,
+        formatCurrency,
     }
 });
 

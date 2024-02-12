@@ -18,10 +18,10 @@
         <!-- Список Проектов -->
         <v-row class="clock-list">
             <v-col 
-            v-for="(project, index) in 10" 
+            v-for="(item, index) in projectsList" 
             cols="3"
             :key="index">   
-                <clockItemComp/>
+                <clockItemComp :clockData="item"/>
             </v-col>
         </v-row>
 
@@ -111,7 +111,6 @@ import useUsersStore from '@/store/users';
 
 const router = useRouter();
 const usersStore = useUsersStore();
-
 
 
 const projectsList = ref([]);

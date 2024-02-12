@@ -40,8 +40,8 @@
                 <v-card-subtitle class="pa-0">
                     Автор:
                 </v-card-subtitle>
-                <v-card-subtitle class="pa-0">
-                    Bob Example
+                <v-card-subtitle class="clock-item__value pa-0">
+                    <strong>{{ props.clockData.user.fullName }}</strong>
                 </v-card-subtitle>
             </v-card-text>
         </v-card-item>
@@ -54,8 +54,8 @@
                 <v-card-subtitle class="pa-0">
                     Название:
                 </v-card-subtitle>
-                <v-card-subtitle class="pa-0">
-                    Название
+                <v-card-subtitle class="clock-item__value pa-0">
+                    <strong>{{ props.clockData?.name }}</strong>
                 </v-card-subtitle>
             </v-card-text>
         </v-card-item>
@@ -68,8 +68,8 @@
                 <v-card-subtitle class="pa-0">
                     Стоимость:
                 </v-card-subtitle>
-                <v-card-subtitle class="pa-0">
-                    599$
+                <v-card-subtitle class="clock-item__value pa-0">
+                    <strong>{{ computedPriceMask }}</strong>
                 </v-card-subtitle>
             </v-card-text>
         </v-card-item>
@@ -82,8 +82,8 @@
                 <v-card-subtitle class="pa-0">
                     Дата публикации:
                 </v-card-subtitle>
-                <v-card-subtitle class="pa-0">
-                    12.04.2022
+                <v-card-subtitle class="clock-item__value pa-0">
+                    <strong>{{ computedCreationData }}</strong>
                 </v-card-subtitle>
             </v-card-text>
         </v-card-item>
@@ -95,7 +95,7 @@
             <!-- Кнопка Редактировать проект -->
             <v-btn 
             class="d-flex align-center justify-center pa-3"
-            v-if="true"
+            v-if="isShowBuy"
             style="color: white;"
             prepend-icon="mdi-currency-usd"
             rounded="lg"
@@ -108,16 +108,50 @@
             <v-btn 
             class="d-flex align-center justify-center pa-3"
             v-else
-            density="compact"
-            icon="mdi-pen"
-            size="small"
+            style="color: white;"
+            prepend-icon="mdi-pen"
+            rounded="lg"
+            variant="flat"
             color="var(--text-primary)"
+            text="Изменить"
             ></v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script setup>
+import momentCofig from '@/plugins/momentConfig';
+import generalUseStore from '@/store/general';
+import useUsersStore  from '@/store/users';
+import { ref, defineProps, computed, onMounted } from 'vue';
+
+const generalStore = generalUseStore();
+const usersStore = useUsersStore();
+
+const props = defineProps({
+    clockData: {
+        type: Object,
+        required: true,
+    }
+});
+
+const isShowBuy = ref(false);
+
+onMounted(async() => {
+    usersStore
+    const me = await usersStore.getUserAndCache();
+    if(props.clockData.user.id !== me.id) {
+        isShowBuy.value = true;
+    }
+})
+
+const computedCreationData = computed(() => {
+    return momentCofig(props.clockData.created * 1000).format('DD.MM.YYYY');
+});
+
+const computedPriceMask = computed(() => {
+    return generalStore.formatCurrency(props.clockData.price);
+});
 
 </script>
 
@@ -145,8 +179,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 0 !important;
+}
+.clock-item__value {
+    text-overflow: ellipsis;
+    max-width: 50%;
 }
 .clock__actions {
     height: 20px !important;
