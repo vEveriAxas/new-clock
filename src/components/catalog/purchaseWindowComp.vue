@@ -1,5 +1,6 @@
 <template>
-    <v-card class="purchase__window">
+    <v-card class="purchase__window" rounded="lg">
+        <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</v-card-text>
         <v-btn color="primary" block @click="emit('close')">Отмена</v-btn>
     </v-card>
 </template>
@@ -13,7 +14,5 @@ const emit = defineEmits(['close']);
 </script>
 
 <style scoped>
-.purchase__window {
-    
-}    
+  
 </style>

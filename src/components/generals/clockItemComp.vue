@@ -92,7 +92,7 @@
         <v-card-actions class="clock__actions px-4 py-0">
             <v-spacer></v-spacer>
         
-            <!-- Кнопка Редактировать проект -->
+            <!-- Кнопка Купить проект -->
             <v-btn 
             class="d-flex align-center justify-center pa-3"
             v-if="isShowBuy"
@@ -102,9 +102,8 @@
             variant="flat"
             color="var(--text-primary)"
             text="Купить"
-            @click="isPurchaseWidow = true"
+            @click="isShowPurchaseWindow = true"
             ></v-btn>
-        
             <!-- Кнопка Редактировать проект -->
             <v-btn 
             v-else
@@ -119,12 +118,12 @@
             ></v-btn>
 
             <v-dialog
-            v-model="isPurchaseWidow"
+            v-model="isShowPurchaseWindow"
             width="auto"
             >
-                <purchaseWindowComp/>
-                
+                <purchaseWindowComp @close="isShowPurchaseWindow = false"/>
             </v-dialog>
+
         </v-card-actions>
     </v-card>
 </template>
@@ -141,6 +140,7 @@ const generalStore = generalUseStore();
 const usersStore = useUsersStore();
 const router = useRouter();
 
+
 const props = defineProps({
     clockData: {
         type: Object,
@@ -149,7 +149,8 @@ const props = defineProps({
 });
 
 const isShowBuy = ref(false);
-const isPurchaseWidow = ref(false);
+const isShowPurchaseWindow = ref(false);
+
 
 onMounted(async() => {
     const me = await usersStore.getUserAndCache();
@@ -157,6 +158,7 @@ onMounted(async() => {
         isShowBuy.value = true;
     }
 });
+
 
 const computedCreationData = computed(() => {
     return momentCofig(props.clockData?.created * 1000).format('DD.MM.YYYY');
@@ -201,5 +203,7 @@ const computedPriceMask = computed(() => {
 }
 .clock__actions {
     height: 20px !important;
+}
+.pusrchase-dialog {
 }
 </style>

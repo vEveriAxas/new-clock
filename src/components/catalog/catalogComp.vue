@@ -19,7 +19,6 @@ import { getAllProjects } from '@/api/clocks';
 
 const projectsList = ref([]);
 
-
 // Получаем список проектов
 onMounted(async() => {
     try {

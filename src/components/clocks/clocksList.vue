@@ -34,9 +34,9 @@ import { useRouter } from 'vue-router';
 import { getUserProjects } from '@/api/clocks';
 import useUsersStore from '@/store/users';
 
+
 const router = useRouter();
 const usersStore = useUsersStore();
-
 
 const projectsList = ref([]);
 
@@ -50,6 +50,7 @@ onMounted(async() => {
         throw new Error(`components/clocksList:onMounted =>  ${err}`,);
     }
 });
+
 
 // function searchProjects(value) {
 //     search.value = value;
