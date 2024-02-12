@@ -41,7 +41,7 @@
                     Автор:
                 </v-card-subtitle>
                 <v-card-subtitle class="clock-item__value pa-0">
-                    <strong>{{ props.clockData.user.fullName }}</strong>
+                    <strong>{{ props.clockData?.user.fullName }}</strong>
                 </v-card-subtitle>
             </v-card-text>
         </v-card-item>
@@ -138,19 +138,18 @@ const props = defineProps({
 const isShowBuy = ref(false);
 
 onMounted(async() => {
-    usersStore
     const me = await usersStore.getUserAndCache();
-    if(props.clockData.user.id !== me.id) {
+    if(props.clockData?.user.id !== me.id) {
         isShowBuy.value = true;
     }
-})
+});
 
 const computedCreationData = computed(() => {
-    return momentCofig(props.clockData.created * 1000).format('DD.MM.YYYY');
+    return momentCofig(props.clockData?.created * 1000).format('DD.MM.YYYY');
 });
 
 const computedPriceMask = computed(() => {
-    return generalStore.formatCurrency(props.clockData.price);
+    return generalStore.formatCurrency(props.clockData?.price);
 });
 
 </script>

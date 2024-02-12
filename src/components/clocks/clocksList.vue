@@ -20,7 +20,7 @@
             <v-col 
             v-for="(item, index) in projectsList" 
             cols="3"
-            :key="index">   
+            :key="index"> 
                 <clockItemComp :clockData="item"/>
             </v-col>
         </v-row>
@@ -130,6 +130,7 @@ onMounted(async() => {
         // Получаем пользователя
         const currentUser = await usersStore.getUserAndCache();
         projectsList.value = [...await getUserProjects(currentUser.id, true, true, 1)];
+        console.log(projectsList.value);
     } catch (err) {
         throw new Error(`components/clocksList:onMounted =>  ${err}`,);
     }

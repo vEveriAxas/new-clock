@@ -9,6 +9,8 @@
         ></error-message-comp>
         <v-window class="create-clock__wrapped" v-model="windowView">
 
+
+
             <!-- Форма создания общих сведений проекта -->
             <v-window-item class="wrapped__item" :value="'general'">
                 <v-card  class="create-clock__general-form" rounded="lg">
@@ -55,20 +57,22 @@
                             Сохранить
                         </v-btn>
                     </v-sheet>
+                    <div v-if="route.name === 'selectClock'" class="buttons__next">
+                        <v-btn  style="color: var(--text-primary)" icon="mdi-arrow-right"></v-btn>
+                    </div>
                 </v-card>
             </v-window-item>
     
-            <v-window-item :value="'input-file'">
+            <v-window-item  class="wrapped__item" :value="'input-file'">
                 <!-- Блок для записи видеоматериалов  -->
-                <v-card class="pa-4 w-50 ml-5" rounded="lg" v-show="true /* Тут был параметр id с маршрута */">
-                    <v-card-title class="pl-0">Видеозаписи</v-card-title>
+                <v-card class="create-clock__input-files" rounded="lg" v-show="true /* Тут был параметр id с маршрута */">
+                    <v-card-title class="create-clock__title pl-0 text-h5">Добавьте видео</v-card-title>
         
         
                     <!-- =================  ПЕРВАЯ ЦИФРА  ========================== -->
-                    <v-card-title>Первая цифра</v-card-title>
+                    <v-card-title class="position__subtite">Первая цифра</v-card-title>
                     <v-card-text class="pa-1 d-flex flex-wrap">
                         <div class="mr-2" v-for="(video, index) in projectData.firstPosition" :key="index">
-                            {{ (video === null)? 'null' : '' }}
                             <clockInput 
                             :videoID="`video-first-position-${index}`"
                             v-model="projectData.firstPosition[index]" 
@@ -77,10 +81,9 @@
                     </v-card-text>
         
                     <!-- =================  ВТОРАЯ ЦИФРА  ========================== -->
-                    <v-card-title>Вторая цифра</v-card-title>
+                    <v-card-title class="position__subtite">Вторая цифра</v-card-title>
                     <v-card-text class="pa-1 d-flex flex-wrap">
                         <div class="mr-2" v-for="(video, index) in projectData.secondPosition" :key="index">
-                            {{ (video === null)? 'null' : '' }}
                             <clockInput 
                             :videoID="`video-second-position-${index}`"
                             v-model="projectData.secondPosition[index]" 
@@ -90,10 +93,9 @@
         
         
                     <!-- =================  ТРЕТЯЯ ЦИФРА  ========================== -->
-                    <v-card-title>Третья цифра</v-card-title>
+                    <v-card-title class="position__subtite">Третья цифра</v-card-title>
                     <v-card-text class="pa-1 d-flex flex-wrap">
                         <div class="mr-2" v-for="(video, index) in projectData.thirdPosition" :key="index">
-                            {{ (video === null)? 'null' : '' }}
                             <clockInput 
                             :videoID="`video-third-position-${index}`"
                             v-model="projectData.thirdPosition[index]" 
@@ -102,10 +104,9 @@
                     </v-card-text>
         
                     <!-- =================  ЧЕТВЕРТАЯ ЦИФРА  ========================== -->
-                    <v-card-title>Четвертая цифра</v-card-title>
+                    <v-card-title class="position__subtite">Четвертая цифра</v-card-title>
                     <v-card-text class="pa-1 d-flex flex-wrap">
                         <div class="mr-2" v-for="(video, index) in projectData.fourthPosition" :key="index">
-                            {{ (video === null)? 'null' : '' }}
                             <clockInput 
                             :videoID="`video-fourth-position-${index}`"
                             v-model="projectData.fourthPosition[index]" 
@@ -114,7 +115,7 @@
                     </v-card-text>
         
                     <!-- Здесь был v-dialog для просмотра видеочасов -->
-                    <v-btn block class="text-none" color="primary" @click="addedVideos">Добавить видео</v-btn>
+                    <v-btn block class="create-clock__confirm-btn" color="primary" @click="addedVideos">Добавить видео</v-btn>
                 </v-card>
             </v-window-item>
         </v-window>
@@ -124,10 +125,11 @@
   
 <script setup>
 import clockInput from './clockInput.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { 
-    createProject, 
+    // createProject, 
+    getProjectByID,
     putVideoProjectByID,
 } from '@/api/clocks';
 
@@ -149,27 +151,35 @@ const windowView = ref('general');
 const isGeneralLoading = ref(false);
 const isShowErrorMessage = ref(false);
 
-// // Получение данных текущего проекта
-// onMounted(async() => {
-//     try {
-//         const project = await getProjectByID(+route.params.id); // преобразуем id со строки в число 
-//         projectData.value = project;
-//         console.log(projectData.value);
-//     } catch (err) {
-//         throw new Error(`components/clocksSelect:onMounted => ${err}`);
-//     }
-// });
+onMounted(() => {
+
+});
+
+// Получение данных текущего проекта
+onMounted(async() => {
+    // Если этот компонент используется для редактирования проекта
+    if(route.name === 'selectClock') {
+        try {
+            const project = await getProjectByID(+route.params.id); // преобразуем id со строки в число 
+            projectData.value = project;
+            console.log(projectData.value);
+        } catch (err) {
+            throw new Error(`components/clocksSelect:onMounted => ${err}`);
+        }
+    }
+});
 
 // Создание проекта
 async function createNewProject() {
     try {
         // Поулучение новосозданного проекта для дальнейшего внесения в него видеофайлов
-        isGeneralLoading.value = true;  // Загрузка
-        const { name, description, isPublic, price } = projectData.value  // необходимые данные для первичного создания проекта
-        const { project, user } = await createProject(name, description, price, isPublic);
-        console.log('Пользователь который создал проект: ', user);
-        projectData.value = {...project}
-        console.log('projectData', projectData.value);
+        // isGeneralLoading.value = true;  // Загрузка
+        // const { name, description, isPublic, price } = projectData.value  // необходимые данные для первичного создания проекта
+        // const { project, user } = await createProject(name, description, price, isPublic);
+        // console.log('Пользователь который создал проект: ', user);
+        // projectData.value = {...project}
+        // console.log('projectData', projectData.value);
+        windowView.value = 'input-file';
     } catch (err) {
         console.log(err);
         isShowErrorMessage.value = true;
@@ -303,6 +313,7 @@ function addedVideos() {
 </script>
 
 <style scoped>
+
 .create-clock__wrapped {
     width: 100%;
 }
@@ -317,10 +328,23 @@ function addedVideos() {
     width: 45%;
     padding: 2rem 4rem;
 }
+.create-clock__input-files {
+    width: 100%;
+    padding: 1rem 3rem;
+}
+.create-clock__title {
+    color: var(--color-descr)
+}
 .clock-select__buttons {
     display: flex;
     justify-content: center;
     margin: 1rem 0;
+}
+.buttons__next {
+    display: flex;
+    width: 110%;
+    justify-content: flex-end;
+    /* border: 1px solid black; */
 }
 .create-clock__title {
     color: var(--text-descr);
@@ -328,5 +352,12 @@ function addedVideos() {
 }
 .create-clock__subtitle {
     color: var(--text-descr);
+}
+.position__subtite {
+    color: var(--text-descr);
+    padding: 3rem 0 0 1rem;
+}
+.create-clock__confirm-btn {
+    margin: 1rem;
 }
 </style>
