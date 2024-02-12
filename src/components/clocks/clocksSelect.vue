@@ -8,9 +8,6 @@
         @close="isShowErrorMessage = false"
         ></error-message-comp>
         <v-window class="create-clock__wrapped" v-model="windowView">
-
-
-
             <!-- Форма создания общих сведений проекта -->
             <v-window-item class="wrapped__item" :value="'general'">
                 <v-card  class="create-clock__general-form" rounded="lg">
@@ -48,27 +45,42 @@
         
                     <!-- Кнопки ("Просмотр часов" / "Сохранить") -->
                     <v-sheet class="clock-select__buttons">
-                        <v-btn 
-                        color="primary" 
-                        block 
+                        <!-- Сохранить -->
+                        <v-btn
+                        class="buttons__save"
+                        color="var(--text-primary)"  
                         :loading="isGeneralLoading"
                         @click="createNewProject"
                         >
                             Сохранить
                         </v-btn>
+                        <!-- Переход к видео -->
+                        <v-btn
+                        v-if="route.name === 'changeClock'"
+                        class="buttons__next" 
+                        @click="windowView = 'input-file'"
+                        color="var(--text-primary)" 
+                        append-icon="mdi-arrow-right"
+                        variant="outlined"
+                        >Видео</v-btn>
+
                     </v-sheet>
-                    <div v-if="route.name === 'selectClock'" class="buttons__next">
-                        <v-btn  style="color: var(--text-primary)" icon="mdi-arrow-right"></v-btn>
-                    </div>
                 </v-card>
             </v-window-item>
     
             <v-window-item  class="wrapped__item" :value="'input-file'">
-                <!-- Блок для записи видеоматериалов  -->
+                
+                <v-btn 
+                class="input-files__button-back" 
+                icon="mdi-arrow-left"
+                @click="windowView = 'general'"
+                ></v-btn>
+                <!-- Блок для записи видеофайлов  -->
                 <v-card class="create-clock__input-files" rounded="lg" v-show="true /* Тут был параметр id с маршрута */">
-                    <v-card-title class="create-clock__title pl-0 text-h5">Добавьте видео</v-card-title>
-        
-        
+                    <!-- Верхняя часть -->
+                    <v-card-title class="create-clock__title text-h5">Добавьте видео</v-card-title>
+
+                    
                     <!-- =================  ПЕРВАЯ ЦИФРА  ========================== -->
                     <v-card-title class="position__subtite">Первая цифра</v-card-title>
                     <v-card-text class="pa-1 d-flex flex-wrap">
@@ -158,7 +170,7 @@ onMounted(() => {
 // Получение данных текущего проекта
 onMounted(async() => {
     // Если этот компонент используется для редактирования проекта
-    if(route.name === 'selectClock') {
+    if(route.name === 'selectClock' || route.name === 'changeClock') {
         try {
             const project = await getProjectByID(+route.params.id); // преобразуем id со строки в число 
             projectData.value = project;
@@ -315,9 +327,11 @@ function addedVideos() {
 <style scoped>
 
 .create-clock__wrapped {
+    position: relative;
     width: 100%;
 }
 .wrapped__item {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -325,30 +339,41 @@ function addedVideos() {
     /* border: 1px solid black; */
 }
 .create-clock__general-form {
+    position: relative;
     width: 45%;
     padding: 2rem 4rem;
 }
 .create-clock__input-files {
+    position: relative;
     width: 100%;
     padding: 1rem 3rem;
+}
+.input-files__button-back {
+    margin: 10px;
+    color: var(--text-primary);
+    z-index: 100;
 }
 .create-clock__title {
     color: var(--color-descr)
 }
 .clock-select__buttons {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     margin: 1rem 0;
+}
+.buttons__save {
+    color: white;
+    flex-grow: 2;
+
 }
 .buttons__next {
     display: flex;
-    width: 110%;
-    justify-content: flex-end;
-    /* border: 1px solid black; */
+    flex-grow: 1;
+    margin: 0 0 0 1rem;
 }
 .create-clock__title {
     color: var(--text-descr);
-
 }
 .create-clock__subtitle {
     color: var(--text-descr);

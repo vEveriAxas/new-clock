@@ -102,13 +102,14 @@
             variant="flat"
             color="var(--text-primary)"
             text="Купить"
+            @click="isPurchaseWidow = true"
             ></v-btn>
         
             <!-- Кнопка Редактировать проект -->
             <v-btn 
             v-else
             class="d-flex align-center justify-center pa-3"
-            @click="router.push({name: 'createClock'})"
+            @click="router.push({name: 'changeClock', params: {id: props.clockData.id}})"
             style="color: white;"
             prepend-icon="mdi-pen"
             rounded="lg"
@@ -116,11 +117,20 @@
             color="var(--text-primary)"
             text="Изменить"
             ></v-btn>
+
+            <v-dialog
+            v-model="isPurchaseWidow"
+            width="auto"
+            >
+                <purchaseWindowComp/>
+                
+            </v-dialog>
         </v-card-actions>
     </v-card>
 </template>
 
 <script setup>
+import purchaseWindowComp from '../catalog/purchaseWindowComp.vue';
 import momentCofig from '@/plugins/momentConfig';
 import generalUseStore from '@/store/general';
 import useUsersStore  from '@/store/users';
@@ -139,6 +149,7 @@ const props = defineProps({
 });
 
 const isShowBuy = ref(false);
+const isPurchaseWidow = ref(false);
 
 onMounted(async() => {
     const me = await usersStore.getUserAndCache();
