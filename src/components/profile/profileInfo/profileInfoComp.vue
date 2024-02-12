@@ -50,18 +50,20 @@
                     ></v-text-field>
                 </v-responsive>
 
-                <!-- ПОДПИСКА -->
+                <!-- ПОДПИСКА / ПРОДЛЕНИЕ -->
                 <v-sheet class="form__subscription">
-                    <v-card-subtitle>Подписка:</v-card-subtitle>
-                    <v-card-subtitle>Платная</v-card-subtitle>
+                    <div>
+                        <v-card-title class="form__subscription--title text-body-1">Подписка:</v-card-title >
+                        <v-card-subtitle class="form__subscription--date">До 01.09.2024</v-card-subtitle>
+                    </div>
+                    <div>
+                        <v-chip color="var(--text-primary)" elevation="2">Активна</v-chip>
+                    </div>
                 </v-sheet>
 
-                <v-divider></v-divider>
+                <!-- <v-divider></v-divider> -->
 
-                <!-- ПРОДЛЕНИЕ -->
                 <v-sheet class="form__subscription">
-                    <v-card-subtitle>Продление</v-card-subtitle>
-                    <v-card-subtitle>до 01.09.2024</v-card-subtitle>
                 </v-sheet>
 
                 <!-- Кнопка СОХРАНИТЬ -->
@@ -174,7 +176,14 @@ function load( ) {
 .form__subscription {
     padding: 0 8px 0 8px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+}
+.form__subscription--title {
+    color: var(--text-descr);
+}
+.form__subscription--date {
+    font-weight: bolder;
 }
 .form__btn-confirm {
     margin: 16px 0;
