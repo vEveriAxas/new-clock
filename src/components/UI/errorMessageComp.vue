@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, watch } from 'vue';
 
 const emit = defineEmits(['close']);
 
@@ -30,6 +30,16 @@ const props = defineProps({
         required: true,
     }
 });
+
+// Скрытие уведомления через время
+watch(() => props.show, (newValue) => {
+    if(newValue === true) {
+        const timeoutID = setTimeout(() => {
+            emit('close');
+            clearTimeout(timeoutID);
+        }, 3000);
+    }
+})
 
 </script>
 

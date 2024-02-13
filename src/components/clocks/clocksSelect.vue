@@ -88,6 +88,7 @@
                             <clockInput 
                             :videoID="`video-first-position-${index}`"
                             v-model="projectData.firstPosition[index]" 
+                            :project-data="{id: +route.params.id, position: 'first', index}"
                             />
                         </div>
                     </v-card-text>
@@ -99,6 +100,7 @@
                             <clockInput 
                             :videoID="`video-second-position-${index}`"
                             v-model="projectData.secondPosition[index]" 
+                            :project-data="{id: +route.params.id, position: 'second', index}"
                             />
                         </div>
                     </v-card-text>
@@ -111,6 +113,7 @@
                             <clockInput 
                             :videoID="`video-third-position-${index}`"
                             v-model="projectData.thirdPosition[index]" 
+                            :project-data="{id: +route.params.id, position: 'third', index}"
                             />
                         </div>
                     </v-card-text>
@@ -122,6 +125,7 @@
                             <clockInput 
                             :videoID="`video-fourth-position-${index}`"
                             v-model="projectData.fourthPosition[index]" 
+                            :project-data="{id: +route.params.id, position: 'fourth', index}"
                             />
                         </div>
                     </v-card-text>
@@ -137,8 +141,9 @@
   
 <script setup>
 import clockInput from './clockInput.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import useGeneralStore from '@/store/general';
 import { 
     createProject, 
     getProjectByID,
@@ -146,6 +151,14 @@ import {
 } from '@/api/clocks';
 
 const route = useRoute();
+const generalStore = useGeneralStore();
+
+const computedProjecID = computed(() => {
+    if(route.params.id === undefined && !route.params.id) {
+        return 1;
+    }
+    return 1
+}) 
 
 // const clockDialog = ref(false);
 const projectData = ref({
@@ -162,13 +175,13 @@ const projectData = ref({
 const windowView = ref('general');
 const isGeneralLoading = ref(false);
 const isShowErrorMessage = ref(false);
-
-onMounted(() => {
-
-});
+const newCreatedProjectID = ref(null);
 
 // Получение данных текущего проекта
 onMounted(async() => {
+    if(route.params.id === undefined && !route.params.id) {
+        return 1;
+    }
     // Если этот компонент используется для редактирования проекта
     if(route.name === 'selectClock' || route.name === 'changeClock') {
         try {
@@ -190,6 +203,7 @@ async function createNewProject() {
         const { project, user } = await createProject(name, description, price, isPublic);
         console.log('Пользователь который создал проект: ', user);
         projectData.value = {...project}
+        newCreatedProjectID.value = project.id;
         console.log('projectData', projectData.value);
         windowView.value = 'input-file';
     } catch (err) {
@@ -231,7 +245,7 @@ function addedVideos() {
                     // Создается новый промис, который выполняет загрузку файла на сервер и записывается в массив Promise.all
                     const fetchVideoURLPromise = new Promise((resolve, reject) => {
                         try {
-                            putVideoProjectByID(+route.params.id, positionObject.videoFiles[index], positionObject.position, index)
+                            putVideoProjectByID(computedProjecID, positionObject.videoFiles[index], positionObject.position, index)
                                 .then((response) => {
                                     // Выходит измененный объект проекта 
                                     resolve(response);
@@ -252,6 +266,7 @@ function addedVideos() {
         Promise.all(promiseArray)
             .then((response) => {
                 console.log('Все промисы получения видеофайлов выполнены', response);
+                console.log(generalStore.compareObjects(projectData.value, response[response.length -1]));
             });
     } catch (err) {
         throw new Error(`components/clocksSelect:addedVideos => ${err}`);
