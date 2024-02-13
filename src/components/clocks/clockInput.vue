@@ -1,6 +1,6 @@
 <template>
     <!-- Форма для загрузки видеофайлов -->
-    <div v-if="true" class="input-container img-avatar" @dragleave="onDragLeave" @dragover.prevent="onDragOver"
+    <div v-if="!props.modelValue" class="input-container img-avatar" @dragleave="onDragLeave" @dragover.prevent="onDragOver"
         @drop.prevent="handleFileDrop">
         <!-- Label для триггера поля ввода видеофайлов -->
         <label watch :for="props.videoID" class="file-wrapper no-selected-image" :style="{
@@ -10,14 +10,23 @@
             <v-icon icon="mdi-play-outline" class="text-h3" color="var(--text-primary)"></v-icon>
         </label>
     </div>
+    <div v-else class="video-container">
+
+        <video class="video" autoplay :id="`${props.videoID}-stub`" :key="`${props.videoID}-stub`"></video>
+    </div>
 
     <!-- Поле ввода для видеофайлов -->
-    <input type="file" style="display: none" :id="props.videoID" :value="!props.modelValue ? props.modelValue : null"
-        @change="handleFileInput" accept="video/*" />
+    <input 
+    type="file" 
+    style="display: none" 
+    :id="props.videoID" 
+    :value="!props.modelValue ? props.modelValue : null"
+    @change="handleFileInput" accept="video/*" />
 </template>
   
 <script setup>
-import { ref, computed, defineProps, defineEmits } from 'vue';
+import { nextTick } from 'vue';
+import { ref, computed, defineProps, defineEmits, watch } from 'vue';
 
 const props = defineProps({
     modelValue: {
@@ -37,6 +46,10 @@ const backgroundColor = '#fff';
 const textColorOver = '#1B7FEB';
 const textColor = '#000';
 
+watch(() => props.modelValue, () => {
+
+});
+
 const currentBackgroundColor = computed(() => {
     return isDragOver.value ? backgroundColorOver : backgroundColor;
 });
@@ -44,6 +57,20 @@ const currentTextColor = computed(() => {
     return isDragOver.value ? textColorOver : textColor;
 });
 
+// Получаем видеофайл и Update в clocksSelect
+async function handleFileInput(event) {
+    try {
+        const file = event.target.files[0];
+        emit('update:modelValue', file);
+        // Ожидаем следующего тика DOM реактивности, присваиваем ресурс к video
+        nextTick(async() => {
+            const videoElement = document.getElementById(`${props.videoID}-stub`);
+            videoElement.src = await loadImage(file);
+        });
+    } catch (err) {
+        return new Error(`components/clockInput:handleFileInput => ${err}`);
+    }
+}
 
 function handleFileDrop(event) {
     const droppedFile = event.dataTransfer.files[0];
@@ -53,19 +80,9 @@ function handleFileDrop(event) {
     emit("update:modelValue", blobFile);
 }
 
-// Получаем видеофайл и Update в clocksSelect
-async function handleFileInput(event) {
-    try {
-        const file = event.target.files[0];
-        emit('update:modelValue', file);
-    } catch (err) {
-        return new Error(`components/handleFileInput:loadImage => ${err}`);
-    }
-}
 
 // Форматируем видеофайл в blob-формат
 function loadImage(file) {
-    console.log(loadImage.name);
     return new Promise((resolve, reject) => {
         try {
             const reader = new FileReader();
@@ -142,6 +159,35 @@ function onDragLeave() {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+.selected-video {
+    width: 168px !important;
+    height: 168px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    user-select: none !important;
+    margin-top: 2rem !important;
+    border-radius: 15px !important;
+    border: 1px solid black;
+}
+.video-container {
+    width: 168px;
+    height: 168px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    margin-top: 2rem;
+    border-radius: 15px;
+    border: 1px solid black;
+}
+.video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .hover-label {

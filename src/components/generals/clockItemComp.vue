@@ -1,5 +1,5 @@
 <template>
-    <v-card class="clock" rounded="lg">
+    <v-card class="clock" rounded="lg" @click="console.log(props.clockData)">
 
         <!-- Верхняя часть карточки проекта -->
         <v-card-item class="item-header">
@@ -88,8 +88,20 @@
             </v-card-text>
         </v-card-item>
 
-        <!-- Блок Действий с проектом -->
+        <!-- Блок взаимодействий с проектом -->
         <v-card-actions class="clock__actions px-4 py-0">
+
+            <v-btn @click="isShowModalClock = true">Открыть</v-btn>
+            <v-dialog v-model="isShowModalClock" class="pa-0" fullscreen>
+                <clockModal 
+                @close="isShowModalClock = false" 
+                :firts-link="props.clockData.firstPosition[0]"
+                :second-link="props.clockData.secondPosition[0]"
+                :third-link="props.clockData.thirdPosition[0]"
+                :four-link="props.clockData.fourthPosition[0]"
+                />
+            </v-dialog>
+
             <v-spacer></v-spacer>
         
             <!-- Кнопка Купить проект -->
@@ -113,6 +125,7 @@
             prepend-icon="mdi-pen"
             rounded="lg"
             variant="flat"
+            size="small"
             color="var(--text-primary)"
             text="Изменить"
             ></v-btn>
@@ -130,6 +143,7 @@
 
 <script setup>
 import purchaseWindowComp from '../catalog/purchaseWindowComp.vue';
+import clockModal from '../clocks/clockModal.vue';
 import momentCofig from '@/plugins/momentConfig';
 import generalUseStore from '@/store/general';
 import useUsersStore  from '@/store/users';
@@ -150,6 +164,7 @@ const props = defineProps({
 
 const isShowBuy = ref(false);
 const isShowPurchaseWindow = ref(false);
+const isShowModalClock = ref(false);
 
 
 onMounted(async() => {

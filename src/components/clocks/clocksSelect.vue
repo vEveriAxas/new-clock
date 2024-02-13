@@ -140,7 +140,7 @@ import clockInput from './clockInput.vue';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { 
-    // createProject, 
+    createProject, 
     getProjectByID,
     putVideoProjectByID,
 } from '@/api/clocks';
@@ -185,12 +185,12 @@ onMounted(async() => {
 async function createNewProject() {
     try {
         // Поулучение новосозданного проекта для дальнейшего внесения в него видеофайлов
-        // isGeneralLoading.value = true;  // Загрузка
-        // const { name, description, isPublic, price } = projectData.value  // необходимые данные для первичного создания проекта
-        // const { project, user } = await createProject(name, description, price, isPublic);
-        // console.log('Пользователь который создал проект: ', user);
-        // projectData.value = {...project}
-        // console.log('projectData', projectData.value);
+        isGeneralLoading.value = true;  // Загрузка
+        const { name, description, isPublic, price } = projectData.value  // необходимые данные для первичного создания проекта
+        const { project, user } = await createProject(name, description, price, isPublic);
+        console.log('Пользователь который создал проект: ', user);
+        projectData.value = {...project}
+        console.log('projectData', projectData.value);
         windowView.value = 'input-file';
     } catch (err) {
         console.log(err);
