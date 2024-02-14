@@ -43,7 +43,8 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, onMounted } from 'vue';
+import moment from '../../plugins/momentConfig';
 
 const props = defineProps({
     firtsLink: {
@@ -62,8 +63,32 @@ const props = defineProps({
         type: [String, null],
         required: true,
     },
-})
+});
 const emit = defineEmits(['close']);
+
+function displayClock(callback) {
+    const firstHour = moment().format('HH').split('')[0];  // Первая позиция
+    const secondHour = moment().format('HH').split('')[1];  // Вторая позиция
+    const firstMinute = moment().format('mm').split('')[0];  // Первая позиция
+    const secondMinute = moment().format('mm').split('')[1];  // Первая позиция
+    const firstSecond = moment().format('ss').split('')[0];  // Первая позиция
+    const secondSecond = moment().format('ss').split('')[1];  // Первая позиция
+
+    console.log(secondMinute);
+    callback([firstHour, secondHour, firstMinute, secondMinute, firstSecond, secondSecond,]);
+    // Обновляем время каждую минуту
+    setTimeout(() => {
+        // const afterSecondMinute = moment().format('mm').split('')[1];  // Первая позиция
+        console.log(secondMinute);
+        displayClock(callback);
+    }, 1000);
+}
+displayClock;
+onMounted(() => {
+    // displayClock((res) => {
+    //     console.log(res);
+    // });
+});
 
 </script>
 
