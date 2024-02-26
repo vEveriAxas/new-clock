@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 
 
-
 const useGeneralStore = defineStore("generalStore", () => {
     // Функция применяется для форматирования ключей объектов из формата snake_case в camelCase
     function convertKeysToCamelCase(obj) {
