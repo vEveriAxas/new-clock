@@ -174,11 +174,43 @@ async function putVideoProjectByID(projectID, videoData, positionNumber, index) 
     }
 }
 
+async function getAllProjects(userID, isPublic, includePublic, page) {
+    const errorStore = useErrorStore();
+    const generalStore = useGeneralStore();
+    try {
+        const response = await axios.get(
+            host + `/api/projects/`,
+            {
+                params: {
+                    user_id: userID,
+                    is_public: isPublic,
+                    include_public: includePublic,
+                    page: page,
+                },
+                headers: {
+                    'Authorization': "Bearer" + " " + localStorage.getItem("access_token"),
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
+            },
+        );
+        // Получение нового проекта с БД
+        const { data: { data } } = response;  // project
+        // Форматирование ключей объекта полученного проекта с формата snake_case в CamelCase
+        const project = generalStore.convertKeysToCamelCase(data);
+        return project;
+    } catch (err) {
+        // Обработка ошибок
+        console.log(err);
+        const { response: { status } } = err;
+        throw new Error(`api/clocks:getProjectByID =>  ${errorStore.checkErrorStatus(status)}`,);
+    }
+}
 
 export {
     createProject,
     getUserProjects,
     getProjectByID, 
+    getAllProjects,
     editProjectByID,
     putVideoProjectByID,
 };

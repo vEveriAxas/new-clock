@@ -18,7 +18,7 @@
     --text-descr: #415174;
     --shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
     --border: 1px solid rgba(0, 0, 0, 0.199);
-    ;
+    --fill-icon-gray: rgb(89, 89, 89);
 }
 
 .app {
